@@ -31,7 +31,7 @@ export default function MapPanel({ properties }: { properties: Property[] }) {
   }, [properties]);
 
   return (
-    <div className="hidden lg:block lg:w-[60%] xl:w-[65%] relative bg-surface-container-high">
+    <div className="hidden lg:block lg:w-[60%] xl:w-[65%] lg:sticky lg:top-36 lg:h-[calc(100vh-9rem)] relative bg-surface-container-high">
       <MapContainer
         ref={mapRef}
         bounds={bounds}

@@ -9,8 +9,8 @@ const navLinks = [
 
 export default function Header({ active = "Discover" }: { active?: string }) {
   return (
-    <header className="bg-surface-container-lowest w-full top-0 sticky border-b border-on-surface-variant/10 z-50">
-      <div className="flex justify-between items-center w-full px-6 md:px-margin-desktop py-4 max-w-container-container-max mx-auto">
+    <header className="bg-surface-container-lowest w-full h-18 border-b border-on-surface-variant/10">
+      <div className="flex justify-between items-center w-full h-full px-6 md:px-margin-desktop max-w-container-container-max mx-auto">
         <Link
           href="/"
           className="text-headline-md font-bold text-primary tracking-tight"
