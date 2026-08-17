@@ -1,12 +1,22 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { formatPrice, type Property } from "@/lib/properties";
+import { useHoveredProperty } from "@/lib/hover-context";
 
 export default function PropertyCard({ property }: { property: Property }) {
+  const { hoveredId, setHoveredId } = useHoveredProperty();
+  const isActive = hoveredId === property.id;
+
   return (
     <Link
       href={`/properties/${property.id}`}
-      className="block bg-surface-container-lowest rounded-xl overflow-hidden property-card-shadow group border border-transparent hover:border-surface-variant transition-all"
+      onMouseEnter={() => setHoveredId(property.id)}
+      onMouseLeave={() => setHoveredId(null)}
+      className={`block bg-surface-container-lowest rounded-xl overflow-hidden property-card-shadow group border transition-all ${
+        isActive ? "border-primary" : "border-transparent hover:border-surface-variant"
+      }`}
     >
       <div className="relative h-64 w-full overflow-hidden">
         <Image

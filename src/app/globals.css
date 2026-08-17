@@ -182,6 +182,15 @@
   border-color: var(--color-primary);
 }
 
+.map-pin-active {
+  background: var(--color-on-tertiary-container);
+  color: var(--color-on-primary);
+  border-color: transparent;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  transform: translate(-50%, -100%) scale(1.15);
+  z-index: 1000;
+}
+
 .leaflet-popup.property-map-popup .leaflet-popup-content-wrapper {
   padding: 0;
   border-radius: 0.5rem;

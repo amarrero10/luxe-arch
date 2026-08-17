@@ -8,10 +8,11 @@ import "leaflet/dist/leaflet.css";
 import Image from "next/image";
 import Link from "next/link";
 import { formatPrice, formatPriceShort, type Property } from "@/lib/properties";
+import { useHoveredProperty } from "@/lib/hover-context";
 
-function priceIcon(property: Property) {
+function priceIcon(property: Property, isActive: boolean) {
   const html = `
-    <div class="map-pin">
+    <div class="map-pin${isActive ? " map-pin-active" : ""}">
       <span>${formatPriceShort(property.price)}</span>
     </div>
   `;
@@ -25,6 +26,7 @@ function priceIcon(property: Property) {
 
 export default function MapPanel({ properties }: { properties: Property[] }) {
   const mapRef = useRef<LeafletMap | null>(null);
+  const { hoveredId, setHoveredId } = useHoveredProperty();
 
   const bounds = useMemo(() => {
     return L.latLngBounds(properties.map((p) => [p.lat, p.lng] as [number, number]));
@@ -49,7 +51,12 @@ export default function MapPanel({ properties }: { properties: Property[] }) {
           <Marker
             key={property.id}
             position={[property.lat, property.lng]}
-            icon={priceIcon(property)}
+            icon={priceIcon(property, hoveredId === property.id)}
+            zIndexOffset={hoveredId === property.id ? 1000 : 0}
+            eventHandlers={{
+              mouseover: () => setHoveredId(property.id),
+              mouseout: () => setHoveredId(null),
+            }}
           >
             <Popup minWidth={192} closeButton={false} className="property-map-popup">
               <Link href={`/properties/${property.id}`} className="block w-48 overflow-hidden rounded-lg">
