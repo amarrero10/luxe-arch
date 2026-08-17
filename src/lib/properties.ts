@@ -8,7 +8,8 @@ export type Property = {
   sqft: number;
   image: string;
   badge?: string;
-  mapPosition: { top: string; left: string };
+  lat: number;
+  lng: number;
 };
 
 export const properties: Property[] = [
@@ -23,7 +24,8 @@ export const properties: Property[] = [
     image:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuD4tDfamJyyBm3ew58mNA1MNonc9KGRQuwQD94P7dHy3JV_XpLdkDAIN-7t2m6jNxB2vxDl172S6ypu8XR16IrG35V81SZsAtEEilhwCIYH3xLJ3644n7qwn1ArryWNmpcvGK9gGW9SWt5id25DXFTMrH1_Zu5K-03meuohGEwmoC1seyfpmSeZhcLE0wh4i8D-TuEHL1tSRkLOxin_S-PNRPh73bCBeQ9TZ6_MPOiBxoB2ETyJvncA",
     badge: "Just Listed",
-    mapPosition: { top: "30%", left: "40%" },
+    lat: 34.0901,
+    lng: -118.4065,
   },
   {
     id: "west-paces-ferry",
@@ -35,7 +37,8 @@ export const properties: Property[] = [
     sqft: 5200,
     image:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuB6L4-z_8yxXeo6Z5k7y5V9uUMD7a_zp2ZwCcaPZMC3LLcIgmsssaJIz_3DLZAmhDXUCo4xZbLe0LTLwEcigxcPHxyZxki4c7kP8lRllo_NrrhROMFozU4zPSFvn6tqB1ty3dHGP0gs_KQZluKQLI9ozbrQGg0uiy3vmdHHqetRNKWHeaYD_T6zdoz1BPDyd_s6Qbxwt433DrJ52Id6NNEuoZlWwn5SZ02Zlw29Ozl6lN9R_06UkKY9",
-    mapPosition: { top: "50%", left: "60%" },
+    lat: 33.8484,
+    lng: -84.3877,
   },
   {
     id: "14th-st-4b",
@@ -47,7 +50,8 @@ export const properties: Property[] = [
     sqft: 1850,
     image:
       "https://lh3.googleusercontent.com/aida-public/AB6AXuAvTHo8tWGyIylil_51DQRhMKTKEOvjkjG2hHGR3pGZUKCOP7FSFGXhZnjtiUfS7Z8mp_0ZjeBymeCSIRLYOASBG666-Jcgba7qWFHZ01ggGw7UC27TwOgZhqhv9SEzq7cJ_LK9CyBZrzDelvvCvEo8YnuDAzLfB28Oaw9FeV5gqkfYEQNByw8GmencsiJg8oJptotpHP7BbayaZeXjVrXqwHEEVE6vQpDRAiezslZEYd68g01uAvBz",
-    mapPosition: { top: "65%", left: "35%" },
+    lat: 40.7343,
+    lng: -73.9928,
   },
 ];
 

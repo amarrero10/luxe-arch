@@ -1,7 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FilterBar from "@/components/FilterBar";
-import MapPanel from "@/components/MapPanel";
+import MapPanel from "@/components/MapPanelLoader";
 import PropertyCard from "@/components/PropertyCard";
 import { properties } from "@/lib/properties";
 
