@@ -8,6 +8,7 @@ import ContactAgentForm from "@/components/ContactAgentForm";
 import MortgageCalculator from "@/components/MortgageCalculator";
 import PropertyLocationMap from "@/components/PropertyLocationMapLoader";
 import { formatCityState, formatPrice, getPropertyById, properties } from "@/lib/properties";
+import { getAgentById } from "@/lib/agents";
 
 export function generateStaticParams() {
   return properties.map((property) => ({ id: property.id }));
@@ -36,6 +37,12 @@ export default async function PropertyDetailsPage({
   const property = getPropertyById(id);
 
   if (!property) {
+    notFound();
+  }
+
+  const agent = getAgentById(property.agentId);
+
+  if (!agent) {
     notFound();
   }
 
@@ -160,7 +167,7 @@ export default async function PropertyDetailsPage({
 
           <div className="lg:col-span-1">
             <div className="sticky top-24 flex flex-col">
-              <ContactAgentForm agent={property.agent} propertyAddress={property.address} />
+              <ContactAgentForm agent={agent} propertyAddress={property.address} />
               <MortgageCalculator homePrice={property.price} />
             </div>
           </div>

@@ -2,7 +2,8 @@ import Link from "next/link";
 
 const navLinks = [
   { label: "Discover", href: "/" },
-  { label: "Agents", href: "/agents" },
+  // Points at the one agent on the roster until a multi-agent directory exists.
+  { label: "Agents", href: "/agents/sarah-jenkins" },
   { label: "Dashboard", href: "/dashboard" },
   { label: "About", href: "/about" },
 ];

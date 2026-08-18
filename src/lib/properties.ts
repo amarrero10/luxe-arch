@@ -1,11 +1,3 @@
-export type Agent = {
-  name: string;
-  title: string;
-  rating: number;
-  reviews: number;
-  photo: string;
-};
-
 export type FeatureCategory = {
   icon: string;
   label: string;
@@ -31,16 +23,7 @@ export type Property = {
   status: string;
   description: string[];
   features: FeatureCategory[];
-  agent: Agent;
-};
-
-const AGENT: Agent = {
-  name: "Sarah Jenkins",
-  title: "Senior Luxury Broker",
-  rating: 5.0,
-  reviews: 42,
-  photo:
-    "https://lh3.googleusercontent.com/aida-public/AB6AXuD0QJafV1pZ_lUAeI5yIX6VTh9eu47TG8dvkE5KjYh0esr_gj3S71aRWGXRPbS_33wrFw9VzcEjpwcoVe4IJil74OBGXMOQl2DRwzyVuqK82H4OOVvmpZOIW_aH6VkmIIfJVYdD-DRxfvXtTEcikeSSkijLrunhm3-jWVYz3TzmVjlALFd8YK0ebhUVVeIHxUlzMWeAUhEg2uKAtPYTdkH2TTnZF1zPCEu_lfTkZ0n5vUdupEMIhasZ",
+  agentId: string;
 };
 
 const HIGHLAND_HERO =
@@ -98,7 +81,7 @@ export const properties: Property[] = [
         items: ["3-Car Attached Garage", "EV Charging Station"],
       },
     ],
-    agent: AGENT,
+    agentId: "sarah-jenkins",
   },
   {
     id: "west-paces-ferry",
@@ -137,7 +120,7 @@ export const properties: Property[] = [
         items: ["2-Car Attached Garage", "Circular Drive"],
       },
     ],
-    agent: AGENT,
+    agentId: "sarah-jenkins",
   },
   {
     id: "14th-st-4b",
@@ -176,7 +159,7 @@ export const properties: Property[] = [
         items: ["Valet Garage Available"],
       },
     ],
-    agent: AGENT,
+    agentId: "sarah-jenkins",
   },
 ];
 
