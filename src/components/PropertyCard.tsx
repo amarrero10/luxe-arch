@@ -2,7 +2,8 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { formatCityState, formatPrice, type Property } from "@/lib/properties";
+import { formatCityState, formatPrice } from "@/lib/format";
+import type { Property } from "@/lib/types";
 import { useHoveredProperty } from "@/lib/hover-context";
 
 export default function PropertyCard({ property }: { property: Property }) {

@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { formatPrice } from "@/lib/properties";
+import { formatPrice } from "@/lib/format";
 
 const PROPERTY_TAX_RATE = 0.011;
 const INSURANCE_RATE = 0.0035;

@@ -1,5 +1,5 @@
 import L from "leaflet";
-import { formatPriceShort } from "./properties";
+import { formatPriceShort } from "./format";
 
 export function priceIcon(price: number, isActive = false) {
   const html = `

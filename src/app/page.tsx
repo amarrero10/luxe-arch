@@ -3,10 +3,12 @@ import Footer from "@/components/Footer";
 import FilterBar from "@/components/FilterBar";
 import MapPanel from "@/components/MapPanelLoader";
 import PropertyCard from "@/components/PropertyCard";
-import { properties } from "@/lib/properties";
+import { getProperties } from "@/lib/properties";
 import { HoveredPropertyProvider } from "@/lib/hover-context";
 
-export default function Home() {
+export default async function Home() {
+  const properties = await getProperties();
+
   return (
     <div className="flex flex-col min-h-screen">
       <div className="sticky top-0 z-50">

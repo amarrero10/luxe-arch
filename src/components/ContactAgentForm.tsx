@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import type { Agent } from "@/lib/agents";
+import type { Agent } from "@/lib/types";
 
 export default function ContactAgentForm({
   agent,

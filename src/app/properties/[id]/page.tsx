@@ -7,10 +7,12 @@ import PropertyGallery from "@/components/PropertyGallery";
 import ContactAgentForm from "@/components/ContactAgentForm";
 import MortgageCalculator from "@/components/MortgageCalculator";
 import PropertyLocationMap from "@/components/PropertyLocationMapLoader";
-import { formatCityState, formatPrice, getPropertyById, properties } from "@/lib/properties";
+import { getProperties, getPropertyById } from "@/lib/properties";
 import { getAgentById } from "@/lib/agents";
+import { formatCityState, formatPrice } from "@/lib/format";
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const properties = await getProperties();
   return properties.map((property) => ({ id: property.id }));
 }
 
@@ -20,7 +22,7 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const property = getPropertyById(id);
+  const property = await getPropertyById(id);
   if (!property) return { title: "Property Not Found - Luxe Arch" };
   return {
     title: `${property.address} - Luxe Arch`,
@@ -28,19 +30,15 @@ export async function generateMetadata({
   };
 }
 
-export default async function PropertyDetailsPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function PropertyDetailsPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const property = getPropertyById(id);
+  const property = await getPropertyById(id);
 
   if (!property) {
     notFound();
   }
 
-  const agent = getAgentById(property.agentId);
+  const agent = await getAgentById(property.agentId);
 
   if (!agent) {
     notFound();
@@ -54,7 +52,7 @@ export default async function PropertyDetailsPage({
         <Header active="Discover" />
       </div>
 
-      <main className="flex-grow w-full max-w-container-container-max mx-auto px-6 md:px-margin-desktop py-stack-lg md:py-section-gap flex flex-col gap-section-gap">
+      <main className="grow w-full max-w-container-container-max mx-auto px-6 md:px-margin-desktop py-stack-lg md:py-section-gap flex flex-col gap-section-gap">
         <Link
           href="/"
           className="inline-flex items-center gap-1 text-label-md font-semibold text-on-surface-variant hover:text-primary transition-colors w-fit"

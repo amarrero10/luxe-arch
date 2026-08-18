@@ -6,10 +6,11 @@ import Footer from "@/components/Footer";
 import PropertyCard from "@/components/PropertyCard";
 import ContactAgentForm from "@/components/ContactAgentForm";
 import { HoveredPropertyProvider } from "@/lib/hover-context";
-import { agents, getAgentById } from "@/lib/agents";
-import { properties } from "@/lib/properties";
+import { getAgentById, getAgents } from "@/lib/agents";
+import { getProperties } from "@/lib/properties";
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const agents = await getAgents();
   return agents.map((agent) => ({ id: agent.id }));
 }
 
@@ -19,7 +20,7 @@ export async function generateMetadata({
   params: Promise<{ id: string }>;
 }): Promise<Metadata> {
   const { id } = await params;
-  const agent = getAgentById(id);
+  const agent = await getAgentById(id);
   if (!agent) return { title: "Agent Not Found - Luxe Arch" };
   return {
     title: `${agent.name} - Luxe Arch`,
@@ -33,12 +34,13 @@ export default async function AgentProfilePage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  const agent = getAgentById(id);
+  const agent = await getAgentById(id);
 
   if (!agent) {
     notFound();
   }
 
+  const properties = await getProperties();
   const listings = properties.filter((property) => property.agentId === agent.id);
 
   return (
