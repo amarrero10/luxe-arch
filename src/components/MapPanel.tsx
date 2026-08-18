@@ -7,22 +7,9 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import Image from "next/image";
 import Link from "next/link";
-import { formatPrice, formatPriceShort, type Property } from "@/lib/properties";
+import { formatCityState, formatPrice, type Property } from "@/lib/properties";
 import { useHoveredProperty } from "@/lib/hover-context";
-
-function priceIcon(property: Property, isActive: boolean) {
-  const html = `
-    <div class="map-pin${isActive ? " map-pin-active" : ""}">
-      <span>${formatPriceShort(property.price)}</span>
-    </div>
-  `;
-  return L.divIcon({
-    html,
-    className: "",
-    iconSize: undefined,
-    iconAnchor: [0, 0],
-  });
-}
+import { priceIcon } from "@/lib/map-icon";
 
 export default function MapPanel({ properties }: { properties: Property[] }) {
   const mapRef = useRef<LeafletMap | null>(null);
@@ -51,7 +38,7 @@ export default function MapPanel({ properties }: { properties: Property[] }) {
           <Marker
             key={property.id}
             position={[property.lat, property.lng]}
-            icon={priceIcon(property, hoveredId === property.id)}
+            icon={priceIcon(property.price, hoveredId === property.id)}
             zIndexOffset={hoveredId === property.id ? 1000 : 0}
             eventHandlers={{
               mouseover: () => setHoveredId(property.id),
@@ -63,7 +50,7 @@ export default function MapPanel({ properties }: { properties: Property[] }) {
                 <div className="relative h-24 w-full">
                   <Image
                     src={property.image}
-                    alt={`${property.address}, ${property.city}`}
+                    alt={`${property.address}, ${formatCityState(property)}`}
                     fill
                     sizes="192px"
                     className="object-cover"

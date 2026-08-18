@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { formatPrice, type Property } from "@/lib/properties";
+import { formatCityState, formatPrice, type Property } from "@/lib/properties";
 import { useHoveredProperty } from "@/lib/hover-context";
 
 export default function PropertyCard({ property }: { property: Property }) {
@@ -21,7 +21,7 @@ export default function PropertyCard({ property }: { property: Property }) {
       <div className="relative h-64 w-full overflow-hidden">
         <Image
           src={property.image}
-          alt={`${property.address}, ${property.city}`}
+          alt={`${property.address}, ${formatCityState(property)}`}
           fill
           sizes="(min-width: 1024px) 35vw, 100vw"
           className="object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out"
@@ -43,7 +43,7 @@ export default function PropertyCard({ property }: { property: Property }) {
           {formatPrice(property.price)}
         </div>
         <div className="text-body-md text-on-surface-variant mb-4">
-          {property.address}, {property.city}
+          {property.address}, {formatCityState(property)}
         </div>
         <div className="flex items-center gap-4 border-t border-surface-variant pt-4 text-label-md font-semibold text-on-surface">
           <div className="flex items-center gap-1.5">
