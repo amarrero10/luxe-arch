@@ -9,10 +9,10 @@ export default function PropertyLocationMap({ lat, lng }: { lat: number; lng: nu
     <MapContainer
       center={[lat, lng]}
       zoom={14}
-      scrollWheelZoom={false}
-      dragging={false}
+      scrollWheelZoom={true}
+      dragging={true}
       doubleClickZoom={false}
-      zoomControl={false}
+      zoomControl={true}
       className="w-full h-full"
     >
       <TileLayer
