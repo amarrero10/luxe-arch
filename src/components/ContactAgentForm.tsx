@@ -5,6 +5,38 @@ import Image from "next/image";
 import Link from "next/link";
 import type { Agent } from "@/lib/types";
 
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_PATTERN = /^[+]?[\d\s()-]{7,20}$/;
+
+type FieldErrors = Partial<Record<"name" | "email" | "phone", string>>;
+
+function validate(values: { name: string; email: string; phone: string }): FieldErrors {
+  const errors: FieldErrors = {};
+
+  if (!values.name.trim()) {
+    errors.name = "Please enter your name.";
+  }
+
+  if (!values.email.trim()) {
+    errors.email = "Please enter your email address.";
+  } else if (!EMAIL_PATTERN.test(values.email.trim())) {
+    errors.email = "Please enter a valid email address.";
+  }
+
+  if (values.phone.trim() && !PHONE_PATTERN.test(values.phone.trim())) {
+    errors.phone = "Please enter a valid phone number.";
+  }
+
+  return errors;
+}
+
+const fieldClass = (hasError: boolean) =>
+  `w-full bg-surface border rounded-lg px-4 py-3 text-body-md outline-none transition-colors ${
+    hasError
+      ? "border-error focus:border-error focus:ring-1 focus:ring-error"
+      : "border-outline-variant focus:border-tertiary-container focus:ring-1 focus:ring-tertiary-container"
+  }`;
+
 export default function ContactAgentForm({
   agent,
   propertyId,
@@ -21,13 +53,31 @@ export default function ContactAgentForm({
   const [sentAs, setSentAs] = useState<"tour" | "question" | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [values, setValues] = useState({ name: "", email: "", phone: "", message: "" });
+  const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [attempted, setAttempted] = useState(false);
   const firstName = agent.name.split(" ")[0];
+
+  function updateField(field: keyof typeof values, value: string) {
+    const nextValues = { ...values, [field]: value };
+    setValues(nextValues);
+    if (attempted) {
+      setFieldErrors(validate(nextValues));
+    }
+  }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    setAttempted(true);
+    const errors = validate(values);
+    setFieldErrors(errors);
+    if (Object.keys(errors).length > 0) {
+      return;
+    }
+
     const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null;
     const intent = submitter?.value === "question" ? "question" : "tour";
-    const formData = new FormData(event.currentTarget);
 
     setSubmitting(true);
     setError(null);
@@ -37,10 +87,10 @@ export default function ContactAgentForm({
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          name: formData.get("name"),
-          email: formData.get("email"),
-          phone: formData.get("phone") || undefined,
-          message: formData.get("message") || undefined,
+          name: values.name.trim(),
+          email: values.email.trim(),
+          phone: values.phone.trim() || undefined,
+          message: values.message.trim() || undefined,
           intent,
           agentId: agent.id,
           propertyId,
@@ -94,27 +144,52 @@ export default function ContactAgentForm({
           </p>
         </div>
       ) : (
-        <form className="flex flex-col gap-stack-sm mt-2" onSubmit={handleSubmit}>
-          <input
-            required
-            name="name"
-            type="text"
-            placeholder="Full Name"
-            className="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 text-body-md focus:outline-none focus:border-tertiary-container focus:ring-1 focus:ring-tertiary-container transition-colors"
-          />
-          <input
-            required
-            name="email"
-            type="email"
-            placeholder="Email Address"
-            className="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 text-body-md focus:outline-none focus:border-tertiary-container focus:ring-1 focus:ring-tertiary-container transition-colors"
-          />
-          <input
-            name="phone"
-            type="tel"
-            placeholder="Phone Number"
-            className="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 text-body-md focus:outline-none focus:border-tertiary-container focus:ring-1 focus:ring-tertiary-container transition-colors"
-          />
+        <form className="flex flex-col gap-stack-sm mt-2" onSubmit={handleSubmit} noValidate>
+          <div>
+            <input
+              name="name"
+              type="text"
+              placeholder="Full Name"
+              value={values.name}
+              onChange={(e) => updateField("name", e.target.value)}
+              aria-invalid={Boolean(fieldErrors.name)}
+              className={fieldClass(Boolean(fieldErrors.name))}
+            />
+            {fieldErrors.name && (
+              <p className="text-label-md text-error mt-1">{fieldErrors.name}</p>
+            )}
+          </div>
+
+          <div>
+            <input
+              name="email"
+              type="email"
+              placeholder="Email Address"
+              value={values.email}
+              onChange={(e) => updateField("email", e.target.value)}
+              aria-invalid={Boolean(fieldErrors.email)}
+              className={fieldClass(Boolean(fieldErrors.email))}
+            />
+            {fieldErrors.email && (
+              <p className="text-label-md text-error mt-1">{fieldErrors.email}</p>
+            )}
+          </div>
+
+          <div>
+            <input
+              name="phone"
+              type="tel"
+              placeholder="Phone Number"
+              value={values.phone}
+              onChange={(e) => updateField("phone", e.target.value)}
+              aria-invalid={Boolean(fieldErrors.phone)}
+              className={fieldClass(Boolean(fieldErrors.phone))}
+            />
+            {fieldErrors.phone && (
+              <p className="text-label-md text-error mt-1">{fieldErrors.phone}</p>
+            )}
+          </div>
+
           <textarea
             name="message"
             placeholder={
@@ -123,9 +198,13 @@ export default function ContactAgentForm({
                 : `I'd like to get in touch with ${firstName}...`
             }
             rows={3}
-            className="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 text-body-md focus:outline-none focus:border-tertiary-container focus:ring-1 focus:ring-tertiary-container transition-colors resize-none"
+            value={values.message}
+            onChange={(e) => updateField("message", e.target.value)}
+            className={`${fieldClass(false)} resize-none`}
           />
+
           {error && <p className="text-label-md font-semibold text-error">{error}</p>}
+
           <button
             type="submit"
             name="intent"
