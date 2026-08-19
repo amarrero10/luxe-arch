@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { headers } from "next/headers";
 import { getAuth } from "@/lib/auth";
+import MobileNav from "./MobileNav";
 
 const publicNavLinks = [
   { label: "Discover", href: "/" },
@@ -41,21 +42,24 @@ export default async function Header({ active = "Discover" }: { active?: string 
           ))}
         </nav>
 
-        {isLoggedIn && (
-          <div className="flex items-center gap-stack-md text-primary text-body-md">
-            <button
-              aria-label="Notifications"
-              className="flex items-center justify-center p-2 rounded-full transition-colors hover:bg-surface-container-low active:opacity-70"
-            >
-              <span className="material-symbols-outlined">notifications</span>
-            </button>
-            <Link
-              href="/dashboard"
-              aria-label="Agent dashboard"
-              className="w-10 h-10 rounded-full overflow-hidden border border-outline-variant cursor-pointer ml-2 bg-surface-container-high"
-            />
-          </div>
-        )}
+        <div className="flex items-center gap-stack-md text-primary text-body-md">
+          {isLoggedIn && (
+            <>
+              <button
+                aria-label="Notifications"
+                className="flex items-center justify-center p-2 rounded-full transition-colors hover:bg-surface-container-low active:opacity-70"
+              >
+                <span className="material-symbols-outlined">notifications</span>
+              </button>
+              <Link
+                href="/dashboard"
+                aria-label="Agent dashboard"
+                className="w-10 h-10 rounded-full overflow-hidden border border-outline-variant cursor-pointer bg-surface-container-high"
+              />
+            </>
+          )}
+          <MobileNav navLinks={navLinks} active={active} />
+        </div>
       </div>
     </header>
   );
