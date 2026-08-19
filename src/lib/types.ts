@@ -31,6 +31,25 @@ export type AgentStat = {
   value: string;
 };
 
+export type InquiryIntent = "tour" | "question";
+export type InquiryStatus = "new" | "contacted";
+
+export type Inquiry = {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  message?: string;
+  intent: InquiryIntent;
+  propertyId?: string;
+  propertyAddress?: string;
+  agentId: string;
+  status: InquiryStatus;
+  createdAt: string;
+};
+
+export type NewInquiry = Omit<Inquiry, "id" | "status" | "createdAt">;
+
 export type Agent = {
   id: string;
   name: string;

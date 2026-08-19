@@ -28,11 +28,7 @@ export async function generateMetadata({
   };
 }
 
-export default async function AgentProfilePage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+export default async function AgentProfilePage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const agent = await getAgentById(id);
 
@@ -49,10 +45,10 @@ export default async function AgentProfilePage({
         <Header active="Agents" />
       </div>
 
-      <main className="flex-grow w-full max-w-container-container-max mx-auto px-6 md:px-margin-desktop py-12 md:py-20 flex flex-col gap-section-gap">
+      <main className="grow w-full max-w-container-container-max mx-auto px-6 md:px-margin-desktop py-12 md:py-20 flex flex-col gap-section-gap">
         <section className="flex flex-col md:flex-row gap-gutter items-start">
           <div className="w-full md:w-1/3 shrink-0">
-            <div className="aspect-[3/4] w-full rounded-lg overflow-hidden shadow-[0_10px_20px_rgba(0,0,0,0.04)] relative group">
+            <div className="aspect-3/4 w-full rounded-lg overflow-hidden shadow-[0_10px_20px_rgba(0,0,0,0.04)] relative group">
               <Image
                 src={agent.portrait}
                 alt={agent.name}
@@ -87,7 +83,9 @@ export default async function AgentProfilePage({
             </div>
 
             <div className="flex flex-col gap-stack-md">
-              <h2 className="text-headline-lg font-bold text-on-surface">About {agent.name.split(" ")[0]}</h2>
+              <h2 className="text-headline-lg font-bold text-on-surface">
+                About {agent.name.split(" ")[0]}
+              </h2>
               {agent.bio.map((paragraph, index) => (
                 <p
                   key={index}
@@ -100,7 +98,10 @@ export default async function AgentProfilePage({
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
               {agent.stats.map((stat) => (
-                <div key={stat.label} className="bg-surface-container-low rounded-lg p-6 flex flex-col gap-2">
+                <div
+                  key={stat.label}
+                  className="bg-surface-container-low rounded-lg p-6 flex flex-col gap-2"
+                >
                   <span className="text-display-lg font-bold text-primary">{stat.value}</span>
                   <span className="text-label-md text-on-surface-variant uppercase tracking-wider">
                     {stat.label}

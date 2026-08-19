@@ -165,7 +165,11 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
 
           <div className="lg:col-span-1">
             <div className="sticky top-24 flex flex-col">
-              <ContactAgentForm agent={agent} propertyAddress={property.address} />
+              <ContactAgentForm
+                agent={agent}
+                propertyId={property.id}
+                propertyAddress={property.address}
+              />
               <MortgageCalculator homePrice={property.price} />
             </div>
           </div>

@@ -7,23 +7,54 @@ import type { Agent } from "@/lib/types";
 
 export default function ContactAgentForm({
   agent,
+  propertyId,
   propertyAddress,
   title = "Contact Agent",
   showAgentSummary = true,
 }: {
   agent: Agent;
+  propertyId?: string;
   propertyAddress?: string;
   title?: string;
   showAgentSummary?: boolean;
 }) {
   const [sentAs, setSentAs] = useState<"tour" | "question" | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const firstName = agent.name.split(" ")[0];
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const submitter = (event.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null;
     const intent = submitter?.value === "question" ? "question" : "tour";
-    setSentAs(intent);
+    const formData = new FormData(event.currentTarget);
+
+    setSubmitting(true);
+    setError(null);
+
+    try {
+      const res = await fetch("/api/inquiries", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: formData.get("name"),
+          email: formData.get("email"),
+          phone: formData.get("phone") || undefined,
+          message: formData.get("message") || undefined,
+          intent,
+          agentId: agent.id,
+          propertyId,
+          propertyAddress,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Request failed");
+      setSentAs(intent);
+    } catch {
+      setError("Something went wrong sending your message. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   return (
@@ -94,21 +125,24 @@ export default function ContactAgentForm({
             rows={3}
             className="w-full bg-surface border border-outline-variant rounded-lg px-4 py-3 text-body-md focus:outline-none focus:border-tertiary-container focus:ring-1 focus:ring-tertiary-container transition-colors resize-none"
           />
+          {error && <p className="text-label-md font-semibold text-error">{error}</p>}
           <button
             type="submit"
             name="intent"
             value="tour"
-            className="w-full bg-primary text-on-primary text-label-md font-semibold py-4 rounded-lg mt-2 hover:bg-primary/90 transition-colors"
+            disabled={submitting}
+            className="w-full bg-primary text-on-primary text-label-md font-semibold py-4 rounded-lg mt-2 hover:bg-primary/90 transition-colors disabled:opacity-60"
           >
-            {propertyAddress ? "Request Tour" : "Get in Touch"}
+            {submitting ? "Sending..." : propertyAddress ? "Request Tour" : "Get in Touch"}
           </button>
           <button
             type="submit"
             name="intent"
             value="question"
-            className="w-full bg-transparent border-2 border-primary text-primary text-label-md font-semibold py-3.5 rounded-lg hover:bg-surface-variant/50 transition-colors"
+            disabled={submitting}
+            className="w-full bg-transparent border-2 border-primary text-primary text-label-md font-semibold py-3.5 rounded-lg hover:bg-surface-variant/50 transition-colors disabled:opacity-60"
           >
-            Ask a Question
+            {submitting ? "Sending..." : "Ask a Question"}
           </button>
         </form>
       )}
