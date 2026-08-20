@@ -163,6 +163,17 @@
   scrollbar-width: none;
 }
 
+@keyframes pin-pop {
+  from {
+    transform: translate(-50%, -100%) scale(0.4);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -100%) scale(1);
+    opacity: 1;
+  }
+}
+
 /* Leaflet price-pin markers */
 .map-pin {
   background: var(--color-surface-container-lowest);
@@ -176,6 +187,13 @@
   white-space: nowrap;
   transform: translate(-50%, -100%);
   cursor: pointer;
+  animation: pin-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+  transition:
+    border-color 0.2s ease,
+    background 0.2s ease,
+    color 0.2s ease,
+    box-shadow 0.2s ease,
+    transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .map-pin:hover {
@@ -203,6 +221,8 @@
   justify-content: center;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
   transform: translate(-50%, -100%);
+  animation: pin-pop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+  animation-delay: 0.15s;
 }
 
 .leaflet-popup.property-map-popup .leaflet-popup-content-wrapper {

@@ -7,6 +7,7 @@ import PropertyGallery from "@/components/PropertyGallery";
 import ContactAgentForm from "@/components/ContactAgentForm";
 import MortgageCalculator from "@/components/MortgageCalculator";
 import PropertyLocationMap from "@/components/PropertyLocationMapLoader";
+import Reveal from "@/components/Reveal";
 import { getProperties, getPropertyById } from "@/lib/properties";
 import { getAgentById } from "@/lib/agents";
 import { formatCityState, formatPrice } from "@/lib/format";
@@ -110,7 +111,7 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-gutter relative">
           <div className="lg:col-span-2 flex flex-col gap-stack-lg">
-            <section>
+            <Reveal as="section">
               <h2 className="text-headline-lg font-bold text-primary mb-stack-md">
                 About this Home
               </h2>
@@ -124,16 +125,17 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
                   {paragraph}
                 </p>
               ))}
-            </section>
+            </Reveal>
 
-            <section>
+            <Reveal as="section">
               <h2 className="text-headline-lg font-bold text-primary mb-stack-md">
                 Features &amp; Amenities
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-stack-lg">
-                {property.features.map((category) => (
-                  <div
+                {property.features.map((category, index) => (
+                  <Reveal
                     key={category.label}
+                    delay={index * 0.08}
                     className="bg-surface-container-low rounded-xl p-stack-md border border-outline-variant/30"
                   >
                     <h3 className="text-headline-md font-semibold text-primary mb-stack-sm flex items-center gap-2">
@@ -150,28 +152,28 @@ export default async function PropertyDetailsPage({ params }: { params: Promise<
                         </li>
                       ))}
                     </ul>
-                  </div>
+                  </Reveal>
                 ))}
               </div>
-            </section>
+            </Reveal>
 
-            <section>
+            <Reveal as="section">
               <h2 className="text-headline-lg font-bold text-primary mb-stack-md">Location</h2>
               <div className="w-full h-64 bg-surface-container-high rounded-xl overflow-hidden border border-outline-variant/20">
                 <PropertyLocationMap lat={property.lat} lng={property.lng} />
               </div>
-            </section>
+            </Reveal>
           </div>
 
           <div className="lg:col-span-1">
-            <div className="sticky top-24 flex flex-col">
+            <Reveal delay={0.15} className="sticky top-24 flex flex-col">
               <ContactAgentForm
                 agent={agent}
                 propertyId={property.id}
                 propertyAddress={property.address}
               />
               <MortgageCalculator homePrice={property.price} />
-            </div>
+            </Reveal>
           </div>
         </div>
       </main>

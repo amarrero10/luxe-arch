@@ -1,16 +1,13 @@
 "use client";
 
 import { useMemo, useRef } from "react";
-import { MapContainer, TileLayer, Marker, Popup, ZoomControl } from "react-leaflet";
+import { MapContainer, TileLayer, ZoomControl } from "react-leaflet";
 import type { Map as LeafletMap } from "leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import Image from "next/image";
-import Link from "next/link";
-import { formatCityState, formatPrice } from "@/lib/format";
 import type { Property } from "@/lib/types";
 import { useHoveredProperty } from "@/lib/hover-context";
-import { priceIcon } from "@/lib/map-icon";
+import PriceMarker from "./PriceMarker";
 
 export default function MapPanel({ properties }: { properties: Property[] }) {
   const mapRef = useRef<LeafletMap | null>(null);
@@ -35,39 +32,15 @@ export default function MapPanel({ properties }: { properties: Property[] }) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         <ZoomControl position="bottomright" />
-        {properties.map((property) => (
-          <Marker
+        {properties.map((property, index) => (
+          <PriceMarker
             key={property.id}
-            position={[property.lat, property.lng]}
-            icon={priceIcon(property.price, hoveredId === property.id)}
-            zIndexOffset={hoveredId === property.id ? 1000 : 0}
-            eventHandlers={{
-              mouseover: () => setHoveredId(property.id),
-              mouseout: () => setHoveredId(null),
-            }}
-          >
-            <Popup minWidth={192} closeButton={false} className="property-map-popup">
-              <Link href={`/properties/${property.id}`} className="block w-48 overflow-hidden rounded-lg">
-                <div className="relative h-24 w-full">
-                  <Image
-                    src={property.image}
-                    alt={`${property.address}, ${formatCityState(property)}`}
-                    fill
-                    sizes="192px"
-                    className="object-cover"
-                  />
-                </div>
-                <div className="p-2 bg-surface-container-lowest">
-                  <div className="text-label-md font-semibold text-primary">
-                    {formatPrice(property.price)}
-                  </div>
-                  <div className="text-[12px] text-on-surface-variant truncate">
-                    {property.address}
-                  </div>
-                </div>
-              </Link>
-            </Popup>
-          </Marker>
+            property={property}
+            isActive={hoveredId === property.id}
+            delayMs={index * 60}
+            onHoverStart={() => setHoveredId(property.id)}
+            onHoverEnd={() => setHoveredId(null)}
+          />
         ))}
       </MapContainer>
 

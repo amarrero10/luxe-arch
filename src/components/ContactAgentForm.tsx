@@ -210,7 +210,7 @@ export default function ContactAgentForm({
             name="intent"
             value="tour"
             disabled={submitting}
-            className="w-full bg-primary text-on-primary text-label-md font-semibold py-4 rounded-lg mt-2 hover:bg-primary/90 transition-colors disabled:opacity-60"
+            className="w-full bg-primary text-on-primary text-label-md font-semibold py-4 rounded-lg mt-2 hover:bg-primary/90 active:scale-[0.97] transition-all disabled:opacity-60"
           >
             {submitting ? "Sending..." : propertyAddress ? "Request Tour" : "Get in Touch"}
           </button>
@@ -219,7 +219,7 @@ export default function ContactAgentForm({
             name="intent"
             value="question"
             disabled={submitting}
-            className="w-full bg-transparent border-2 border-primary text-primary text-label-md font-semibold py-3.5 rounded-lg hover:bg-surface-variant/50 transition-colors disabled:opacity-60"
+            className="w-full bg-transparent border-2 border-primary text-primary text-label-md font-semibold py-3.5 rounded-lg hover:bg-surface-variant/50 active:scale-[0.97] transition-all disabled:opacity-60"
           >
             {submitting ? "Sending..." : "Ask a Question"}
           </button>

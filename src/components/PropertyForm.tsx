@@ -359,7 +359,7 @@ export default function PropertyForm({
         <button
           type="submit"
           disabled={submitting}
-          className="w-full sm:w-auto self-start bg-primary text-on-primary text-label-md font-semibold px-8 py-4 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-60"
+          className="w-full sm:w-auto self-start bg-primary text-on-primary text-label-md font-semibold px-8 py-4 rounded-lg hover:bg-primary/90 active:scale-[0.97] transition-all disabled:opacity-60"
         >
           {submitting
             ? isEdit

@@ -1,9 +1,9 @@
 import L from "leaflet";
 import { formatPriceShort } from "./format";
 
-export function priceIcon(price: number, isActive = false) {
+export function priceIcon(price: number, delayMs = 0) {
   const html = `
-    <div class="map-pin${isActive ? " map-pin-active" : ""}">
+    <div class="map-pin" style="animation-delay: ${delayMs}ms;">
       <span>${formatPriceShort(price)}</span>
     </div>
   `;
