@@ -1,5 +1,6 @@
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import InquiryCard from "@/components/InquiryCard";
@@ -34,7 +35,16 @@ export default async function DashboardPage() {
               Signed in as {session.user.name} • {newCount} new
             </p>
           </div>
-          <SignOutButton />
+          <div className="flex items-center gap-stack-sm">
+            <Link
+              href="/dashboard/listings/new"
+              className="flex items-center gap-2 px-4 py-2 rounded-full bg-primary text-on-primary text-label-md font-semibold hover:bg-primary/90 transition-colors"
+            >
+              <span className="material-symbols-outlined text-[18px]">add</span>
+              Add Listing
+            </Link>
+            <SignOutButton />
+          </div>
         </div>
 
         {inquiries.length === 0 ? (
