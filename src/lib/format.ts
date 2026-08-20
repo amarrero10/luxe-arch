@@ -29,8 +29,11 @@ export function formatRelativeTime(isoDate: string): string {
 }
 
 export function formatPriceShort(price: number): string {
+  if (price < 1_000_000) {
+    const thousands = Math.round(price / 1000);
+    if (thousands < 1000) return `$${thousands}k`;
+  }
   const millions = price / 1_000_000;
-  const rounded =
-    millions >= 10 ? millions.toFixed(0) : millions.toFixed(2).replace(/0$/, "").replace(/\.$/, "");
+  const rounded = millions >= 10 ? millions.toFixed(0) : parseFloat(millions.toFixed(2));
   return `$${rounded}M`;
 }

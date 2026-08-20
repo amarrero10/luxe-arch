@@ -27,12 +27,6 @@ export default function PropertyCard({ property }: { property: Property }) {
           sizes="(min-width: 1024px) 35vw, 100vw"
           className="object-cover group-hover:scale-105 transition-transform duration-700 ease-in-out"
         />
-        <button
-          aria-label="Save property"
-          className="absolute top-4 right-4 p-2 rounded-full bg-surface-container-lowest/80 backdrop-blur-sm text-on-surface transition-colors hover:text-error"
-        >
-          <span className="material-symbols-outlined">favorite</span>
-        </button>
         {property.badge && (
           <div className="absolute top-4 left-4 px-3 py-1 bg-surface-container-lowest/90 backdrop-blur-md rounded-full text-label-md font-semibold text-on-tertiary-container shadow-sm">
             {property.badge}
