@@ -52,6 +52,9 @@ export type NewInquiry = Omit<Inquiry, "id" | "status" | "createdAt">;
 
 export type Agent = {
   id: string;
+  // Matches the Better Auth user's email, so a logged-in session can be
+  // resolved to the agent record it manages.
+  email: string;
   name: string;
   title: string;
   rating: number;

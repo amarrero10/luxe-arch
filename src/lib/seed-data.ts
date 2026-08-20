@@ -142,6 +142,7 @@ export const seedProperties: Property[] = [
 export const seedAgents: Agent[] = [
   {
     id: AGENT_ID,
+    email: "agent@luxearch.demo",
     name: "Sarah Jenkins",
     title: "Senior Luxury Broker",
     rating: 5.0,

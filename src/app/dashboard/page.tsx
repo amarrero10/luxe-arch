@@ -4,9 +4,12 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import InquiryCard from "@/components/InquiryCard";
+import DashboardListingCard from "@/components/DashboardListingCard";
 import SignOutButton from "@/components/SignOutButton";
 import { getAuth } from "@/lib/auth";
 import { getInquiries } from "@/lib/inquiries";
+import { getAgentByEmail } from "@/lib/agents";
+import { getProperties } from "@/lib/properties";
 
 export default async function DashboardPage() {
   const auth = await getAuth();
@@ -15,6 +18,10 @@ export default async function DashboardPage() {
   if (!session) {
     redirect("/login?redirect=/dashboard");
   }
+
+  const agent = await getAgentByEmail(session.user.email);
+  const properties = await getProperties();
+  const myListings = agent ? properties.filter((property) => property.agentId === agent.id) : [];
 
   const inquiries = await getInquiries();
   const newCount = inquiries.filter((inquiry) => inquiry.status === "new").length;
@@ -25,14 +32,12 @@ export default async function DashboardPage() {
         <Header active="Dashboard" />
       </div>
 
-      <main className="grow w-full max-w-container-container-max mx-auto px-6 md:px-margin-desktop py-12 md:py-20 flex flex-col gap-stack-lg">
+      <main className="grow w-full max-w-container-container-max mx-auto px-6 md:px-margin-desktop py-12 md:py-20 flex flex-col gap-section-gap">
         <div className="flex justify-between items-end border-b border-outline-variant pb-4 flex-wrap gap-4">
           <div>
-            <h1 className="text-headline-lg font-bold text-primary tracking-tight">
-              Recent Inquiries
-            </h1>
+            <h1 className="text-headline-lg font-bold text-primary tracking-tight">Dashboard</h1>
             <p className="text-body-md text-on-surface-variant mt-2">
-              Signed in as {session.user.name} • {newCount} new
+              Signed in as {session.user.name} • {newCount} new inquir{newCount === 1 ? "y" : "ies"}
             </p>
           </div>
           <div className="flex items-center gap-stack-sm">
@@ -47,17 +52,37 @@ export default async function DashboardPage() {
           </div>
         </div>
 
-        {inquiries.length === 0 ? (
-          <div className="text-center py-section-gap text-on-surface-variant">
-            No inquiries yet. They&rsquo;ll show up here as soon as someone submits a form.
-          </div>
-        ) : (
-          <div className="flex flex-col gap-stack-md">
-            {inquiries.map((inquiry) => (
-              <InquiryCard key={inquiry.id} inquiry={inquiry} />
-            ))}
-          </div>
-        )}
+        <section className="flex flex-col gap-stack-md">
+          <h2 className="text-headline-md font-semibold text-primary">
+            My Listings ({myListings.length})
+          </h2>
+          {myListings.length === 0 ? (
+            <div className="text-center py-section-gap text-on-surface-variant">
+              No listings yet. Use &ldquo;Add Listing&rdquo; above to create your first one.
+            </div>
+          ) : (
+            <div className="flex flex-col gap-stack-sm">
+              {myListings.map((property) => (
+                <DashboardListingCard key={property.id} property={property} />
+              ))}
+            </div>
+          )}
+        </section>
+
+        <section className="flex flex-col gap-stack-md">
+          <h2 className="text-headline-md font-semibold text-primary">Recent Inquiries</h2>
+          {inquiries.length === 0 ? (
+            <div className="text-center py-section-gap text-on-surface-variant">
+              No inquiries yet. They&rsquo;ll show up here as soon as someone submits a form.
+            </div>
+          ) : (
+            <div className="flex flex-col gap-stack-md">
+              {inquiries.map((inquiry) => (
+                <InquiryCard key={inquiry.id} inquiry={inquiry} />
+              ))}
+            </div>
+          )}
+        </section>
       </main>
 
       <Footer />

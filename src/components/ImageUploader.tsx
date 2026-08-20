@@ -12,11 +12,21 @@ type ImageItem = {
 };
 
 export default function ImageUploader({
+  initialUrls,
   onImagesChange,
 }: {
+  initialUrls?: string[];
   onImagesChange: (urls: string[]) => void;
 }) {
-  const [images, setImages] = useState<ImageItem[]>([]);
+  const [images, setImages] = useState<ImageItem[]>(
+    () =>
+      initialUrls?.map((url) => ({
+        id: url,
+        previewUrl: url,
+        status: "done" as const,
+        url,
+      })) ?? [],
+  );
 
   useEffect(() => {
     onImagesChange(

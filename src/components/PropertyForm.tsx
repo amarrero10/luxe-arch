@@ -3,20 +3,23 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import ImageUploader from "./ImageUploader";
+import type { Property } from "@/lib/types";
 
 type FeatureRow = {
-  id: string;
   icon: string;
   label: string;
   items: string;
 };
 
 type FieldErrors = Partial<
-  Record<"address" | "city" | "state" | "zip" | "price" | "beds" | "baths" | "sqft" | "yearBuilt" | "images", string>
+  Record<
+    "address" | "city" | "state" | "zip" | "price" | "beds" | "baths" | "sqft" | "yearBuilt" | "images",
+    string
+  >
 >;
 
 function newFeatureRow(): FeatureRow {
-  return { id: Math.random().toString(36).slice(2), icon: "", label: "", items: "" };
+  return { icon: "", label: "", items: "" };
 }
 
 const fieldClass = (hasError: boolean) =>
@@ -26,23 +29,40 @@ const fieldClass = (hasError: boolean) =>
       : "border-outline-variant focus:border-tertiary-container focus:ring-1 focus:ring-tertiary-container"
   }`;
 
-export default function NewListingForm({ agentId }: { agentId: string }) {
+export default function PropertyForm({
+  agentId,
+  property,
+}: {
+  agentId: string;
+  property?: Property;
+}) {
   const router = useRouter();
+  const isEdit = Boolean(property);
 
-  const [address, setAddress] = useState("");
-  const [city, setCity] = useState("");
-  const [state, setState] = useState("");
-  const [zip, setZip] = useState("");
-  const [price, setPrice] = useState("");
-  const [beds, setBeds] = useState("");
-  const [baths, setBaths] = useState("");
-  const [sqft, setSqft] = useState("");
-  const [yearBuilt, setYearBuilt] = useState(String(new Date().getFullYear()));
-  const [status, setStatus] = useState("For Sale");
-  const [badge, setBadge] = useState("");
-  const [description, setDescription] = useState("");
-  const [features, setFeatures] = useState<FeatureRow[]>([newFeatureRow()]);
-  const [images, setImages] = useState<string[]>([]);
+  const [address, setAddress] = useState(property?.address ?? "");
+  const [city, setCity] = useState(property?.city ?? "");
+  const [state, setState] = useState(property?.state ?? "");
+  const [zip, setZip] = useState(property?.zip ?? "");
+  const [price, setPrice] = useState(property ? String(property.price) : "");
+  const [beds, setBeds] = useState(property ? String(property.beds) : "");
+  const [baths, setBaths] = useState(property ? String(property.baths) : "");
+  const [sqft, setSqft] = useState(property ? String(property.sqft) : "");
+  const [yearBuilt, setYearBuilt] = useState(
+    property ? String(property.yearBuilt) : String(new Date().getFullYear()),
+  );
+  const [status, setStatus] = useState(property?.status ?? "For Sale");
+  const [badge, setBadge] = useState(property?.badge ?? "");
+  const [description, setDescription] = useState(property?.description.join("\n\n") ?? "");
+  const [features, setFeatures] = useState<FeatureRow[]>(() =>
+    property && property.features.length > 0
+      ? property.features.map((f) => ({
+          icon: f.icon,
+          label: f.label,
+          items: f.items.join("\n"),
+        }))
+      : [newFeatureRow()],
+  );
+  const [images, setImages] = useState<string[]>(property?.gallery ?? []);
 
   const [attempted, setAttempted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -67,12 +87,12 @@ export default function NewListingForm({ agentId }: { agentId: string }) {
   // so they clear as soon as each field becomes valid, not just on the next submit.
   const fieldErrors = attempted ? validate() : {};
 
-  function updateFeature(id: string, patch: Partial<FeatureRow>) {
-    setFeatures((prev) => prev.map((row) => (row.id === id ? { ...row, ...patch } : row)));
+  function updateFeature(index: number, patch: Partial<FeatureRow>) {
+    setFeatures((prev) => prev.map((row, i) => (i === index ? { ...row, ...patch } : row)));
   }
 
-  function removeFeature(id: string) {
-    setFeatures((prev) => prev.filter((row) => row.id !== id));
+  function removeFeature(index: number) {
+    setFeatures((prev) => prev.filter((_, i) => i !== index));
   }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
@@ -97,8 +117,8 @@ export default function NewListingForm({ agentId }: { agentId: string }) {
 
     setSubmitting(true);
     try {
-      const res = await fetch("/api/properties", {
-        method: "POST",
+      const res = await fetch(isEdit ? `/api/properties/${property!.id}` : "/api/properties", {
+        method: isEdit ? "PATCH" : "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           address: address.trim(),
@@ -121,10 +141,11 @@ export default function NewListingForm({ agentId }: { agentId: string }) {
 
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error || "Something went wrong creating the listing.");
+        throw new Error(data.error || "Something went wrong saving the listing.");
       }
 
       router.push(`/properties/${data.id}`);
+      router.refresh();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");
       setSubmitting(false);
@@ -142,7 +163,9 @@ export default function NewListingForm({ agentId }: { agentId: string }) {
             onChange={(e) => setAddress(e.target.value)}
             className={fieldClass(Boolean(fieldErrors.address))}
           />
-          {fieldErrors.address && <p className="text-label-md text-error mt-1">{fieldErrors.address}</p>}
+          {fieldErrors.address && (
+            <p className="text-label-md text-error mt-1">{fieldErrors.address}</p>
+          )}
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-stack-sm">
           <div>
@@ -161,7 +184,9 @@ export default function NewListingForm({ agentId }: { agentId: string }) {
               onChange={(e) => setState(e.target.value)}
               className={fieldClass(Boolean(fieldErrors.state))}
             />
-            {fieldErrors.state && <p className="text-label-md text-error mt-1">{fieldErrors.state}</p>}
+            {fieldErrors.state && (
+              <p className="text-label-md text-error mt-1">{fieldErrors.state}</p>
+            )}
           </div>
           <div>
             <input
@@ -174,7 +199,8 @@ export default function NewListingForm({ agentId }: { agentId: string }) {
           </div>
         </div>
         <p className="text-label-md text-on-surface-variant">
-          We&rsquo;ll place the map pin automatically from this address.
+          We&rsquo;ll place the map pin automatically from this address
+          {isEdit ? " if it changes" : ""}.
         </p>
       </section>
 
@@ -190,7 +216,9 @@ export default function NewListingForm({ agentId }: { agentId: string }) {
               onChange={(e) => setPrice(e.target.value)}
               className={fieldClass(Boolean(fieldErrors.price))}
             />
-            {fieldErrors.price && <p className="text-label-md text-error mt-1">{fieldErrors.price}</p>}
+            {fieldErrors.price && (
+              <p className="text-label-md text-error mt-1">{fieldErrors.price}</p>
+            )}
           </div>
           <div>
             <input
@@ -214,7 +242,9 @@ export default function NewListingForm({ agentId }: { agentId: string }) {
               onChange={(e) => setBaths(e.target.value)}
               className={fieldClass(Boolean(fieldErrors.baths))}
             />
-            {fieldErrors.baths && <p className="text-label-md text-error mt-1">{fieldErrors.baths}</p>}
+            {fieldErrors.baths && (
+              <p className="text-label-md text-error mt-1">{fieldErrors.baths}</p>
+            )}
           </div>
           <div>
             <input
@@ -280,33 +310,33 @@ export default function NewListingForm({ agentId }: { agentId: string }) {
             + Add Category
           </button>
         </div>
-        {features.map((row) => (
+        {features.map((row, index) => (
           <div
-            key={row.id}
+            key={index}
             className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_2fr_auto] gap-2 items-start bg-surface-container-low rounded-lg p-3"
           >
             <input
               placeholder="Icon (e.g. kitchen)"
               value={row.icon}
-              onChange={(e) => updateFeature(row.id, { icon: e.target.value })}
+              onChange={(e) => updateFeature(index, { icon: e.target.value })}
               className={fieldClass(false)}
             />
             <input
               placeholder="Category (e.g. Appliances)"
               value={row.label}
-              onChange={(e) => updateFeature(row.id, { label: e.target.value })}
+              onChange={(e) => updateFeature(index, { label: e.target.value })}
               className={fieldClass(false)}
             />
             <textarea
               placeholder={"One item per line"}
               rows={2}
               value={row.items}
-              onChange={(e) => updateFeature(row.id, { items: e.target.value })}
+              onChange={(e) => updateFeature(index, { items: e.target.value })}
               className={`${fieldClass(false)} resize-none`}
             />
             <button
               type="button"
-              onClick={() => removeFeature(row.id)}
+              onClick={() => removeFeature(index)}
               aria-label="Remove category"
               className="p-2 text-on-surface-variant hover:text-error transition-colors"
             >
@@ -318,7 +348,7 @@ export default function NewListingForm({ agentId }: { agentId: string }) {
 
       <section className="flex flex-col gap-stack-sm">
         <h2 className="text-headline-md font-semibold text-primary">Photos</h2>
-        <ImageUploader onImagesChange={setImages} />
+        <ImageUploader initialUrls={property?.gallery} onImagesChange={setImages} />
         {fieldErrors.images && <p className="text-label-md text-error">{fieldErrors.images}</p>}
       </section>
 
@@ -329,7 +359,13 @@ export default function NewListingForm({ agentId }: { agentId: string }) {
         disabled={submitting}
         className="w-full sm:w-auto self-start bg-primary text-on-primary text-label-md font-semibold px-8 py-4 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-60"
       >
-        {submitting ? "Creating Listing..." : "Create Listing"}
+        {submitting
+          ? isEdit
+            ? "Saving Changes..."
+            : "Creating Listing..."
+          : isEdit
+            ? "Save Changes"
+            : "Create Listing"}
       </button>
     </form>
   );

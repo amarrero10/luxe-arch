@@ -37,3 +37,21 @@ export async function createProperty(input: Omit<Property, "id">): Promise<Prope
   await collection.insertOne(property);
   return property;
 }
+
+export async function updateProperty(
+  id: string,
+  input: Omit<Property, "id">,
+): Promise<Property | null> {
+  const db = await getDb();
+  const result = await db
+    .collection<Property>("properties")
+    .findOneAndUpdate({ id }, { $set: input }, { returnDocument: "after", projection: { _id: 0 } });
+  return result;
+}
+
+export async function deleteProperty(id: string): Promise<Property | null> {
+  const db = await getDb();
+  return db
+    .collection<Property>("properties")
+    .findOneAndDelete({ id }, { projection: { _id: 0 } });
+}
