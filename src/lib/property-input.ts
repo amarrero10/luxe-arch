@@ -1,6 +1,6 @@
 import "server-only";
 import { geocodeAddress } from "./geocode";
-import type { FeatureCategory, Property } from "./types";
+import { PROPERTY_TYPES, type FeatureCategory, type Property, type PropertyType } from "./types";
 
 function toNumber(value: unknown): number | null {
   const num = Number(value);
@@ -49,6 +49,11 @@ export async function parsePropertyInput(body: unknown): Promise<PropertyInputRe
   const state = typeof b.state === "string" ? b.state.trim() : "";
   const zip = typeof b.zip === "string" ? b.zip.trim() : "";
   const status = typeof b.status === "string" ? b.status.trim() : "For Sale";
+  const propertyType: PropertyType =
+    typeof b.propertyType === "string" &&
+    PROPERTY_TYPES.includes(b.propertyType as PropertyType)
+      ? (b.propertyType as PropertyType)
+      : "House";
   const badge = typeof b.badge === "string" && b.badge.trim() ? b.badge.trim() : undefined;
   const agentId = typeof b.agentId === "string" ? b.agentId.trim() : "";
 
@@ -95,6 +100,7 @@ export async function parsePropertyInput(body: unknown): Promise<PropertyInputRe
       state,
       zip,
       status,
+      propertyType,
       badge,
       agentId,
       price,

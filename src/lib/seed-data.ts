@@ -36,6 +36,7 @@ export const seedProperties: Property[] = [
     lat: 34.0901,
     lng: -118.4065,
     status: "For Sale",
+    propertyType: "House",
     description: [
       "Perched above the city with sweeping twilight views, this modern hillside villa pairs floor-to-ceiling glass with clean architectural lines. The zero-edge infinity pool anchors an entertainer's terrace that flows directly from the open-concept living and dining spaces.",
       "Inside, soaring ceilings and warm wide-plank oak floors frame a chef's kitchen with a marble waterfall island. The primary suite occupies its own wing, complete with a spa-inspired bath and a private view deck.",
@@ -75,6 +76,7 @@ export const seedProperties: Property[] = [
     lat: 33.8484,
     lng: -84.3877,
     status: "For Sale",
+    propertyType: "House",
     description: [
       "A bright, sunlit interior anchors this Buckhead estate, where double-height ceilings and a wall of windows frame views of the lushly landscaped grounds. Minimalist designer finishes in neutral tones keep the sprawling floor plan feeling calm and current.",
       "The main level opens to a covered outdoor living room and summer kitchen, ideal for Atlanta's long entertaining season. Upstairs, five generous bedrooms include a primary suite with a private balcony overlooking the gardens.",
@@ -114,6 +116,7 @@ export const seedProperties: Property[] = [
     lat: 40.7343,
     lng: -73.9928,
     status: "For Sale",
+    propertyType: "Condo",
     description: [
       "A sleek, contemporary residence in a full-amenity building defined by extensive glass and minimalist black steel framing. Unit 4B enjoys a landscaped terrace view and an open living and dining layout bathed in natural light.",
       "The chef's kitchen features stone counters and integrated appliances, while both bedrooms include en-suite baths and custom closets. A rare combination of scale and light for downtown living.",

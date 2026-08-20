@@ -4,9 +4,57 @@ import type { Property } from "./types";
 
 export type { FeatureCategory, Property } from "./types";
 
-export async function getProperties(): Promise<Property[]> {
+export type PropertyFilters = {
+  q?: string;
+  minPrice?: number;
+  maxPrice?: number;
+  propertyType?: string;
+  minBeds?: number;
+  minBaths?: number;
+};
+
+function escapeRegex(value: string): string {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function buildQuery(filters?: PropertyFilters): Record<string, unknown> {
+  if (!filters) return {};
+
+  const query: Record<string, unknown> = {};
+
+  if (filters.q?.trim()) {
+    const regex = new RegExp(escapeRegex(filters.q.trim()), "i");
+    query.$or = [{ address: regex }, { city: regex }, { state: regex }, { zip: regex }];
+  }
+
+  if (filters.minPrice !== undefined || filters.maxPrice !== undefined) {
+    const priceQuery: Record<string, number> = {};
+    if (filters.minPrice !== undefined) priceQuery.$gte = filters.minPrice;
+    if (filters.maxPrice !== undefined) priceQuery.$lte = filters.maxPrice;
+    query.price = priceQuery;
+  }
+
+  if (filters.propertyType) {
+    query.propertyType = filters.propertyType;
+  }
+
+  if (filters.minBeds !== undefined) {
+    query.beds = { $gte: filters.minBeds };
+  }
+
+  if (filters.minBaths !== undefined) {
+    query.baths = { $gte: filters.minBaths };
+  }
+
+  return query;
+}
+
+export async function getProperties(filters?: PropertyFilters): Promise<Property[]> {
   const db = await getDb();
-  return db.collection<Property>("properties").find({}, { projection: { _id: 0 } }).toArray();
+  return db
+    .collection<Property>("properties")
+    .find(buildQuery(filters), { projection: { _id: 0 } })
+    .toArray();
 }
 
 export async function getPropertyById(id: string): Promise<Property | null> {

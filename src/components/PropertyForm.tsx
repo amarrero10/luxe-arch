@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import ImageUploader from "./ImageUploader";
-import type { Property } from "@/lib/types";
+import { PROPERTY_TYPES, type Property, type PropertyType } from "@/lib/types";
 
 type FeatureRow = {
   icon: string;
@@ -52,6 +52,7 @@ export default function PropertyForm({
     property ? String(property.yearBuilt) : String(new Date().getFullYear()),
   );
   const [status, setStatus] = useState(property?.status ?? "For Sale");
+  const [propertyType, setPropertyType] = useState(property?.propertyType ?? "House");
   const [badge, setBadge] = useState(property?.badge ?? "");
   const [description, setDescription] = useState(property?.description.join("\n\n") ?? "");
   const [features, setFeatures] = useState<FeatureRow[]>(() =>
@@ -132,6 +133,7 @@ export default function PropertyForm({
           sqft: Number(sqft),
           yearBuilt: Number(yearBuilt),
           status,
+          propertyType,
           badge: badge.trim() || undefined,
           description,
           features: featurePayload,
@@ -279,6 +281,15 @@ export default function PropertyForm({
             <option>For Sale</option>
             <option>Pending</option>
             <option>Sold</option>
+          </select>
+          <select
+            value={propertyType}
+            onChange={(e) => setPropertyType(e.target.value as PropertyType)}
+            className={fieldClass(false)}
+          >
+            {PROPERTY_TYPES.map((type) => (
+              <option key={type}>{type}</option>
+            ))}
           </select>
         </div>
         <input

@@ -1,20 +1,59 @@
+import { Suspense } from "react";
+import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FilterBar from "@/components/FilterBar";
 import MapPanel from "@/components/MapPanelLoader";
 import PropertyCard from "@/components/PropertyCard";
 import Reveal from "@/components/Reveal";
-import { getProperties } from "@/lib/properties";
+import { getProperties, type PropertyFilters } from "@/lib/properties";
 import { HoveredPropertyProvider } from "@/lib/hover-context";
 
-export default async function Home() {
-  const properties = await getProperties();
+type SearchParams = Record<string, string | string[] | undefined>;
+
+function parseFilters(searchParams: SearchParams): PropertyFilters {
+  const get = (key: string) => {
+    const value = searchParams[key];
+    return Array.isArray(value) ? value[0] : value;
+  };
+  const toNumber = (value?: string) => {
+    const num = Number(value);
+    return value && Number.isFinite(num) ? num : undefined;
+  };
+
+  return {
+    q: get("q"),
+    minPrice: toNumber(get("minPrice")),
+    maxPrice: toNumber(get("maxPrice")),
+    propertyType: get("type"),
+    minBeds: toNumber(get("minBeds")),
+    minBaths: toNumber(get("minBaths")),
+  };
+}
+
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<SearchParams>;
+}) {
+  const filters = parseFilters(await searchParams);
+  const properties = await getProperties(filters);
+  const hasFilters = Boolean(
+    filters.q ||
+      filters.minPrice ||
+      filters.maxPrice ||
+      filters.propertyType ||
+      filters.minBeds ||
+      filters.minBaths,
+  );
 
   return (
     <div className="flex flex-col min-h-screen">
       <div className="sticky top-0 z-50">
         <Header active="Discover" />
-        <FilterBar />
+        <Suspense>
+          <FilterBar />
+        </Suspense>
       </div>
 
       <HoveredPropertyProvider>
@@ -26,24 +65,47 @@ export default async function Home() {
                   Properties
                 </h1>
                 <p className="text-body-md text-on-surface-variant mt-1">
-                  {properties.length} homes available in view
+                  {properties.length} home{properties.length === 1 ? "" : "s"} available in view
                 </p>
               </div>
             </div>
 
-            <div className="flex flex-col gap-stack-lg">
-              {properties.map((property, index) => (
-                <Reveal key={property.id} delay={index * 0.08} y={16}>
-                  <PropertyCard property={property} />
-                </Reveal>
-              ))}
-            </div>
+            {properties.length === 0 ? (
+              <div className="flex flex-col items-center text-center gap-stack-sm py-section-gap">
+                <span className="material-symbols-outlined text-[40px] text-on-surface-variant">
+                  search_off
+                </span>
+                <p className="text-body-lg text-on-surface-variant">
+                  No properties match your filters.
+                </p>
+                {hasFilters && (
+                  <Link
+                    href="/"
+                    className="text-label-md font-semibold text-primary hover:underline underline-offset-4"
+                  >
+                    Clear all filters
+                  </Link>
+                )}
+              </div>
+            ) : (
+              <>
+                <div className="flex flex-col gap-stack-lg">
+                  {properties.map((property, index) => (
+                    <Reveal key={property.id} delay={index * 0.08} y={16}>
+                      <PropertyCard property={property} />
+                    </Reveal>
+                  ))}
+                </div>
 
-            <div className="flex justify-center mt-stack-lg mb-stack-lg">
-              <button className="px-6 py-3 border border-outline rounded-full text-label-md font-semibold text-on-surface hover:bg-surface-container-low transition-colors">
-                Load More Properties
-              </button>
-            </div>
+                {!hasFilters && (
+                  <div className="flex justify-center mt-stack-lg mb-stack-lg">
+                    <button className="px-6 py-3 border border-outline rounded-full text-label-md font-semibold text-on-surface hover:bg-surface-container-low transition-colors">
+                      Load More Properties
+                    </button>
+                  </div>
+                )}
+              </>
+            )}
           </div>
 
           <MapPanel properties={properties} />

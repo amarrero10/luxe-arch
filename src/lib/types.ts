@@ -4,6 +4,9 @@ export type FeatureCategory = {
   items: string[];
 };
 
+export const PROPERTY_TYPES = ["House", "Condo", "Townhouse"] as const;
+export type PropertyType = (typeof PROPERTY_TYPES)[number];
+
 export type Property = {
   id: string;
   price: number;
@@ -21,6 +24,7 @@ export type Property = {
   lat: number;
   lng: number;
   status: string;
+  propertyType: PropertyType;
   description: string[];
   features: FeatureCategory[];
   agentId: string;
