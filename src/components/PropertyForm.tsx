@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import ImageUploader from "./ImageUploader";
 import type { Property } from "@/lib/types";
 
@@ -354,19 +355,29 @@ export default function PropertyForm({
 
       {error && <p className="text-label-md font-semibold text-error">{error}</p>}
 
-      <button
-        type="submit"
-        disabled={submitting}
-        className="w-full sm:w-auto self-start bg-primary text-on-primary text-label-md font-semibold px-8 py-4 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-60"
-      >
-        {submitting
-          ? isEdit
-            ? "Saving Changes..."
-            : "Creating Listing..."
-          : isEdit
-            ? "Save Changes"
-            : "Create Listing"}
-      </button>
+      <div className="flex items-center gap-stack-md">
+        <button
+          type="submit"
+          disabled={submitting}
+          className="w-full sm:w-auto self-start bg-primary text-on-primary text-label-md font-semibold px-8 py-4 rounded-lg hover:bg-primary/90 transition-colors disabled:opacity-60"
+        >
+          {submitting
+            ? isEdit
+              ? "Saving Changes..."
+              : "Creating Listing..."
+            : isEdit
+              ? "Save Changes"
+              : "Create Listing"}
+        </button>
+        {isEdit && (
+          <Link
+            href="/dashboard"
+            className="text-label-md font-semibold text-on-surface-variant hover:text-on-surface transition-colors"
+          >
+            Cancel
+          </Link>
+        )}
+      </div>
     </form>
   );
 }
