@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { getSiteURL } from "@/lib/site-url";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -8,9 +9,24 @@ const inter = Inter({
   weight: ["400", "600", "700"],
 });
 
+const title = "Luxe Arch - Discover Properties";
+const description = "Luxe Arch — discover, tour, and inquire about premium properties.";
+
 export const metadata: Metadata = {
-  title: "Luxe Arch - Discover Properties",
-  description: "Luxe Arch — discover, tour, and inquire about premium properties.",
+  metadataBase: new URL(getSiteURL()),
+  title,
+  description,
+  openGraph: {
+    title,
+    description,
+    siteName: "Luxe Arch",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title,
+    description,
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

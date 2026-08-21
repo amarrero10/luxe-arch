@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
 import LegalPageLayout from "@/components/LegalPageLayout";
 
+const title = "Cookie Policy - Luxe Arch";
+const description = "How Luxe Arch uses cookies.";
+
 export const metadata: Metadata = {
-  title: "Cookie Policy - Luxe Arch",
-  description: "How Luxe Arch uses cookies.",
+  title,
+  description,
+  openGraph: { title, description },
+  twitter: { title, description },
 };
 
 export default function CookiePolicyPage() {

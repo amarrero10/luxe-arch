@@ -6,9 +6,14 @@ import Footer from "@/components/Footer";
 import Reveal from "@/components/Reveal";
 import { getAgents } from "@/lib/agents";
 
+const title = "Our Agents - Luxe Arch";
+const description = "Meet the Luxe Arch team of luxury real estate brokers.";
+
 export const metadata: Metadata = {
-  title: "Our Agents - Luxe Arch",
-  description: "Meet the Luxe Arch team of luxury real estate brokers.",
+  title,
+  description,
+  openGraph: { title, description },
+  twitter: { title, description },
 };
 
 export default async function AgentsDirectoryPage() {

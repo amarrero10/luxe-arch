@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
 import LegalPageLayout from "@/components/LegalPageLayout";
 
+const title = "Privacy Policy - Luxe Arch";
+const description = "How Luxe Arch collects, uses, and protects your information.";
+
 export const metadata: Metadata = {
-  title: "Privacy Policy - Luxe Arch",
-  description: "How Luxe Arch collects, uses, and protects your information.",
+  title,
+  description,
+  openGraph: { title, description },
+  twitter: { title, description },
 };
 
 export default function PrivacyPolicyPage() {

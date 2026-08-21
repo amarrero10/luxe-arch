@@ -21,7 +21,7 @@ export default function Loading() {
             </div>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-2 h-[400px] md:h-[600px] rounded-xl overflow-hidden">
+          <div className="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-2 h-100 md:h-150 rounded-xl overflow-hidden">
             <Bone className="md:col-span-2 md:row-span-2 rounded-none h-full w-full" />
             <Bone className="hidden md:block rounded-none h-full w-full" />
             <Bone className="hidden md:block rounded-none h-full w-full" />

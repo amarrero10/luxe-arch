@@ -23,9 +23,14 @@ export async function generateMetadata({
   const { id } = await params;
   const agent = await getAgentById(id);
   if (!agent) return { title: "Agent Not Found - Luxe Arch" };
+
+  const title = `${agent.name} - Luxe Arch`;
+  const description = agent.bio[0];
   return {
-    title: `${agent.name} - Luxe Arch`,
-    description: agent.bio[0],
+    title,
+    description,
+    openGraph: { title, description },
+    twitter: { title, description },
   };
 }
 

@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
 import LegalPageLayout from "@/components/LegalPageLayout";
 
+const title = "Terms of Service - Luxe Arch";
+const description = "The terms that govern your use of the Luxe Arch site.";
+
 export const metadata: Metadata = {
-  title: "Terms of Service - Luxe Arch",
-  description: "The terms that govern your use of the Luxe Arch site.",
+  title,
+  description,
+  openGraph: { title, description },
+  twitter: { title, description },
 };
 
 export default function TermsOfServicePage() {

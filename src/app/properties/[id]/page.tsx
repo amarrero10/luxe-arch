@@ -25,9 +25,14 @@ export async function generateMetadata({
   const { id } = await params;
   const property = await getPropertyById(id);
   if (!property) return { title: "Property Not Found - Luxe Arch" };
+
+  const title = `${property.address} - Luxe Arch`;
+  const description = property.description[0];
   return {
-    title: `${property.address} - Luxe Arch`,
-    description: property.description[0],
+    title,
+    description,
+    openGraph: { title, description },
+    twitter: { title, description },
   };
 }
 

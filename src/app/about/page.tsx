@@ -7,10 +7,15 @@ import Reveal from "@/components/Reveal";
 import { getProperties } from "@/lib/properties";
 import { getAgents } from "@/lib/agents";
 
+const title = "About - Luxe Arch";
+const description =
+  "Luxe Arch represents a small number of architecturally significant homes across the country, and the people who live in them.";
+
 export const metadata: Metadata = {
-  title: "About - Luxe Arch",
-  description:
-    "Luxe Arch represents a small number of architecturally significant homes across the country, and the people who live in them.",
+  title,
+  description,
+  openGraph: { title, description },
+  twitter: { title, description },
 };
 
 const values = [
