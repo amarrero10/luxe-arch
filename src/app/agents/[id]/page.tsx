@@ -139,7 +139,7 @@ export default async function AgentProfilePage({ params }: { params: Promise<{ i
           </HoveredPropertyProvider>
         </Reveal>
 
-        <Reveal as="section" id="contact" className="max-w-xl scroll-mt-24">
+        <Reveal as="section" id="contact" className="max-w-xl mx-auto w-full scroll-mt-24">
           <ContactAgentForm agent={agent} title="Get in Touch" showAgentSummary={false} />
         </Reveal>
       </main>
