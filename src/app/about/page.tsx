@@ -42,10 +42,10 @@ export default async function AboutPage() {
 
   const stats = [
     { label: "Active Listings", value: String(properties.length) },
-    { label: "States Served", value: states.join(" · ") || "—" },
     { label: "Years Combined Exp.", value: "12+" },
     { label: "Sales Volume", value: "$1.4B+" },
   ];
+  const statesServed = states.join(" · ") || "—";
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -94,8 +94,8 @@ export default async function AboutPage() {
             </p>
           </Reveal>
 
-          <section>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <section className="flex flex-col gap-4">
+            <div className="grid grid-cols-3 gap-4">
               {stats.map((stat, index) => (
                 <Reveal
                   key={stat.label}
@@ -109,6 +109,17 @@ export default async function AboutPage() {
                 </Reveal>
               ))}
             </div>
+            <Reveal
+              delay={stats.length * 0.08}
+              className="w-full bg-surface-container-low rounded-lg p-6 flex flex-col gap-2 "
+            >
+              <span className="text-label-md text-on-surface-variant uppercase tracking-wider text-center">
+                States Served
+              </span>
+              <span className="text-headline-lg font-bold text-primary leading-relaxed text-center ">
+                {statesServed}
+              </span>
+            </Reveal>
           </section>
 
           <Reveal as="section">
@@ -170,7 +181,10 @@ export default async function AboutPage() {
             </div>
           </Reveal>
 
-          <Reveal as="section" className="text-center bg-surface-container-low rounded-xl py-16 px-6">
+          <Reveal
+            as="section"
+            className="text-center bg-surface-container-low rounded-xl py-16 px-6"
+          >
             <h2 className="text-headline-lg font-bold text-primary mb-2">
               Ready to see what&rsquo;s available?
             </h2>
