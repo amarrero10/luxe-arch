@@ -4,8 +4,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FilterBar from "@/components/FilterBar";
 import MapPanel from "@/components/MapPanelLoader";
-import PropertyCard from "@/components/PropertyCard";
-import Reveal from "@/components/Reveal";
+import PropertyList from "@/components/PropertyList";
 import { getProperties, type PropertyFilters } from "@/lib/properties";
 import { HoveredPropertyProvider } from "@/lib/hover-context";
 
@@ -88,23 +87,7 @@ export default async function Home({
                 )}
               </div>
             ) : (
-              <>
-                <div className="flex flex-col gap-stack-lg">
-                  {properties.map((property, index) => (
-                    <Reveal key={property.id} delay={index * 0.08} y={16}>
-                      <PropertyCard property={property} />
-                    </Reveal>
-                  ))}
-                </div>
-
-                {!hasFilters && (
-                  <div className="flex justify-center mt-stack-lg mb-stack-lg">
-                    <button className="px-6 py-3 border border-outline rounded-full text-label-md font-semibold text-on-surface hover:bg-surface-container-low transition-colors">
-                      Load More Properties
-                    </button>
-                  </div>
-                )}
-              </>
+              <PropertyList key={JSON.stringify(filters)} properties={properties} />
             )}
           </div>
 
