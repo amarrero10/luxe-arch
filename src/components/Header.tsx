@@ -5,8 +5,7 @@ import MobileNav from "./MobileNav";
 
 const publicNavLinks = [
   { label: "Discover", href: "/" },
-  // Points at the one agent on the roster until a multi-agent directory exists.
-  { label: "Agents", href: "/agents/sarah-jenkins" },
+  { label: "Agents", href: "/agents" },
   { label: "About", href: "/about" },
 ];
 

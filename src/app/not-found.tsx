@@ -37,10 +37,10 @@ export default function NotFound() {
               Back to Discover
             </Link>
             <Link
-              href="/agents/sarah-jenkins"
+              href="/agents"
               className="border border-outline text-on-surface text-label-md font-semibold px-8 py-4 rounded-lg hover:bg-surface-container-low transition-all"
             >
-              Meet the Agent
+              Meet Our Agents
             </Link>
           </div>
         </Reveal>
